@@ -1,0 +1,21 @@
+name: transit-data-eng
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.10
+  - pip
+  - ipykernel          # Allows you to use this env in Jupyter
+  - pandas
+  - matplotlib
+  - tqdm
+  - pip:
+      - fastapi
+      - uvicorn
+      - pydantic
+      - httpx
+      - streamlit
+      - requests
+      - ollama
+      - pytest         # For the 'Engineering Standards' they mentioned
+

@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+
+  # 1. The Local LLM Engine running on the local GPU
+  ollama:
+    image: ollama/ollama:latest
+    container_name: buss-llm-engine
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # GPU Reservation
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    entrypoint: /bin/sh
+    command: -c "ollama serve & sleep 5 && ollama pull llama3 && wait"
+    healthcheck:
+      test: [ "CMD-SHELL", "ollama list | grep -q 'llama3'" ]
+      interval: 20s      # Check every 20s
+      timeout: 10s
+      retries: 30        # 20s * 30 = 10 minutes total allowance
+      start_period: 10s  # Give it a head start before checking
+    restart: unless-stopped
+
+
+
+  # 2. The Data Transformation Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: buss-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # 3. The Analytics Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: buss-frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

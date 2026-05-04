@@ -1,0 +1,18 @@
+name: transit-data-eng
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - polars
+  - pydantic
+  - pip:
+      - dlt
+      - ollama            # Local LLM management
+      - instructor        # Crucial: Forces LLMs to output valid JSON for your pipeline
+      - pytest
+      - loguru
+      - great-expectations
+      - fastapi
+      - uvicorn
+
