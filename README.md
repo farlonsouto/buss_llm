@@ -63,9 +63,11 @@ ready.
 
 ------------------------------
 
-## 📈 Decision Analysis Resolution (DAR): Scalability & Architecture## The Problem
+## 📈 Further improvements and limitations: Scalability & Architecture
 
-The current Request-Response architecture is synchronous. Scaling to millions of users would result in VRAM contention,
+## The Problem
+
+The current Request-Response architecture is synchronous. Scaling to hundreds of thousands of users would result in VRAM contention,
 request timeouts, and catastrophic failure during peak transit hours.
 
 ## The Decision: Event-Driven Architecture (EDA)

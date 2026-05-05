@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class LLMProcessor:
     """
-    Orchestrates the transformation of raw text into structured transit intelligence.
+    Orchestrates the transformation of raw text into structured transit information.
     """
 
     def __init__(self, base_url: str = "http://docker.internal", model: str = "llama3"):
@@ -34,6 +34,8 @@ class LLMProcessor:
 
     # Inside backend/src/processor.py
     def _generate_system_prompt(self) -> str:
+        """ Generates a system prompt for the LLM. Following the best practices of prompt engineering, the prompt shall
+        establish a persona and constraints. Furthermore, it shall be concise and focused. """
         return (
             "You are a strict JSON generator for a transit engine. "
             "Analyze the user feedback and output ONLY valid JSON. "
